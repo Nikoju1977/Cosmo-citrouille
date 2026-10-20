@@ -49,3 +49,6 @@ La progression est stockée localement dans le navigateur (`localStorage`). Le j
 ## Droits
 
 Aucune licence open source n'est fournie : les droits sont réservés au titulaire du projet.
+## Défi 800 points / 2 minutes
+
+Chaque monde doit être réussi avec **au moins 800 points en 120 secondes maximum**. Le compteur repart à zéro à chaque nouvelle planète. Contre les 14 boss, les 800 points **et** la victoire sur le boss sont nécessaires avant la fin du chrono. Les deux modes de difficulté disposent du même chrono ; les obstacles sont plus difficiles en mode Défi.

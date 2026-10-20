@@ -1,17 +1,20 @@
 from pathlib import Path
-import re
-BASE = Path(__file__).resolve().parents[1]
-game = (BASE / "www" / "game.js").read_text(encoding="utf-8")
-html = (BASE / "www" / "index.html").read_text(encoding="utf-8")
-def test_140_worlds_and_14_bosses():
-    assert re.search(r"length\s*:\s*140", game)
-    assert len(re.findall(r"bossName\s*:", game)) == 14
+ROOT=Path(__file__).resolve().parents[1]
+game=(ROOT/"www"/"game.js").read_text(encoding="utf-8")
+html=(ROOT/"www"/"index.html").read_text(encoding="utf-8")
+
+def test_140_worlds_14_bosses():
+    assert "length:140" in game
+    assert game.count("bossName:")==14
     assert "step===9" in game
-    assert "finishBoss" in game
-def test_difficulty_progression():
-    assert "setDifficulty" in game
-    assert "cosmo-unlocked" in game
-    assert "aventure" in game and "expert" in game
-def test_mobile_mount():
-    assert 'id="space"' in html
-    assert 'game.js' in html and 'styles.css' in html
+
+def test_points_and_time_goal():
+    assert "const goal=800,bossHp=" in game
+    assert "goal,bossHp,seconds:120" in game
+    assert "DURATION=LEVELS[level-1].seconds;" in game
+    assert "state.score=0;" in game
+    assert "state.candy>=GOAL" not in game
+    assert "state.score<GOAL||state.left<=0" in game
+    assert "if(state.boss&&!state.boss.defeated)" in game
+    assert "checkGoal()" in game
+    assert "0/800" in html

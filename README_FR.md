@@ -47,3 +47,6 @@ Les niveaux débloqués, le mode de difficulté, la victoire finale, le meilleur
 ## Tests
 
 `tests/test_140_worlds.py` et `tests/test_mobile_interactions.py` vérifient les interactions sous Chromium sur plusieurs formats, le choix des galaxies, la difficulté, la progression, la pause, les collisions, les combats contre les boss, la victoire finale et l'absence d'erreurs JavaScript. Les tests automatisés sont utiles, mais **ne garantissent pas** un fonctionnement parfait sur tous les iPhone et Android. Tester sur appareils réels avant diffusion publique.
+## Objectif chronométré (version 800 points)
+
+Sur chacun des 140 mondes, il faut atteindre 800 points avant la fin des deux minutes. Chaque nouveau niveau recommence avec zéro point. Les 14 boss exigent également que leur jauge de vie soit réduite à zéro. En mode Défi, les obstacles sont plus rapides et plus nombreux, mais le temps limite reste de 120 secondes.

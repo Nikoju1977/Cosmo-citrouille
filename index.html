@@ -107,10 +107,10 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
       <div class="menu-bottom">
         <div class="mission-card">
           <span class="mission-icon" aria-hidden="true">🍬</span>
-          <div><strong>140 mondes à explorer !</strong><span>14 galaxies mystérieuses + 14 boss rigolos !</span></div>
+          <div><strong>140 mondes à explorer !</strong><span>14 galaxies + 14 boss · 800 points en 2 minutes !</span></div>
         </div>
         <button id="play" class="big-button"><span>CHOISIR UN MONDE</span><span class="button-rocket" aria-hidden="true">🚀</span></button>
-        <p class="instructions">☝️ Glisse ton doigt · 140 mondes · 2 difficultés</p>
+        <p class="instructions">☝️ Glisse ton doigt · 800 points en 2 min · 140 mondes</p>
       </div>
     </section>
 
@@ -127,12 +127,12 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
 
     <div id="hud" class="hud hidden" aria-live="off">
       <div class="hud-row">
-        <div class="hud-bubble candies-counter"><span class="hud-icon" aria-hidden="true">🍬</span><span id="candy-count">0/15</span></div>
+        <div class="hud-bubble candies-counter"><span class="hud-icon" aria-hidden="true">⭐</span><span id="candy-count">0/800</span></div>
         <div id="hearts" class="hearts" aria-label="4 cœurs">♥ ♥ ♥ ♥</div>
         <button id="pause" class="icon-button" aria-label="Mettre en pause"><span aria-hidden="true">Ⅱ</span></button>
       </div>
       <div class="progress-track" aria-hidden="true"><div id="progress-bar"></div></div>
-      <div class="hud-sub"><span id="score">⭐ 0</span><span id="level-label">MONDE 1/140</span><span id="timer">⏱ 1:30</span></div>
+      <div class="hud-sub"><span id="score">⭐ 0</span><span id="level-label">MONDE 1/140</span><span id="timer">⏱ 2:00</span></div>
     </div>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -207,11 +207,11 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
   const LEVELS=Array.from({length:140},(_,i)=>{
     const sector=Math.floor(i/10),step=i%10,world=SECTORS[sector],boss=step===9;
     const modifiers=['drift','drift','zigzag','chase','storm','drift','zigzag','chase','storm','boss'];
-    const goal=boss?6+Math.floor(sector/2):Math.min(29,9+Math.floor(i/10)+Math.floor(step/3)*2);
+    const goal=800,bossHp=boss?6+Math.floor(sector/2):0;
     return {name:boss?world.bossName:`${world.name} — ${MISSION_NAMES[step]}`,
       short:boss?world.bossName:MISSION_NAMES[step],sector,step,icon:boss?'👑':world.icon,
-      hint:boss?`BOSS • ${goal} étoiles`:MISSION_HINTS[step],
-      goal,seconds:boss?Math.max(105,130-sector):Math.max(85,105-sector),
+      hint:boss?`800 PTS • ${bossHp} étoiles`:'800 PTS • 2 MINUTES',
+      goal,bossHp,seconds:120,
       meteor:Math.min(.46,.15+sector*.014+step*.016),
       speed:Math.min(310,130+sector*9+step*6),
       spawn:Math.max(.34,.68-sector*.016-step*.015),
@@ -481,24 +481,24 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
     e.jelly=true;e.pattern=state.boss.hp<state.boss.max*.5?'chase':'zigzag';return e;
   }
   function hud(){const isBoss=!!LEVELS[state.level-1].boss;
-    dom.count.textContent=isBoss?`${GOAL-(state.boss?.hp??GOAL)}/${GOAL}`:`${Math.min(GOAL,state.candy)}/${GOAL}`;
-    document.querySelector('.hud-icon').textContent=isBoss?'✨':'🍬';
+    dom.count.textContent=`${Math.min(GOAL,state.score)}/${GOAL}`;
+    document.querySelector('.hud-icon').textContent=isBoss?'👑':'⭐';
     dom.hearts.textContent='♥ '.repeat(state.hearts).trim()+' ♡'.repeat(MAX_HEARTS-state.hearts);
     dom.hearts.setAttribute('aria-label',state.hearts+' cœurs restants');
-    dom.progress.style.width=Math.min(100,(isBoss?GOAL-(state.boss?.hp??GOAL):state.candy)/GOAL*100)+'%';
+    dom.progress.style.width=Math.min(100,state.score/GOAL*100)+'%';
     dom.hud.classList.toggle('boss-hud',isBoss);
-    $('level-label').textContent=isBoss?`BOSS ${Math.floor((state.level-1)/10)+1}/14`:`MONDE ${state.level}/140`;
+    $('level-label').textContent=isBoss?`BOSS ${Math.floor((state.level-1)/10)+1}/14 · PV ${state.boss?.hp??0}`:`MONDE ${state.level}/140`;
     dom.score.textContent='⭐ '+state.score;let n=Math.max(0,Math.ceil(state.left));dom.timer.textContent='⏱ '+Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
   }
   function toast(text){dom.toast.textContent=text;dom.toast.classList.add('show');state.toastUntil=time+1.85;}
   function resetLevel(level,keepScore=false){
-    state.level=level;state.mapSector=Math.floor((level-1)/10);GOAL=LEVELS[level-1].goal;DURATION=LEVELS[level-1].seconds*(isExpert()?.86:1);
-    if(!keepScore)state.score=0;
+    state.level=level;state.mapSector=Math.floor((level-1)/10);GOAL=LEVELS[level-1].goal;DURATION=LEVELS[level-1].seconds;
+    state.score=0; // Objectif individuel de 800 points par niveau.
     state.candy=0;state.hearts=keepScore?Math.min(MAX_HEARTS,Math.max(isExpert()?2:3,state.hearts+1)):(isExpert()?3:MAX_HEARTS);
     state.left=DURATION;state.elapsed=0;state.spawn=.65;state.wave=6;state.invuln=2;state.shield=0;
     state.combo=0;state.lastCandy=-999;state.shake=0;state.entities=[];state.particles=[];state.floatText=[];
     state.player={x:W*.5,y:H*.76,tx:W*.5,ty:H*.76,vx:0,rot:0};state.pointer=false;state.finishWin=false;
-    state.boss=LEVELS[level-1].boss?{x:W*.5,y:Math.min(220,Math.max(177,H*.265)),hp:GOAL,max:GOAL,bolts:[],nextStar:1.7,nextMeteor:1.85,hitTimer:0}:null;
+    state.boss=LEVELS[level-1].boss?{x:W*.5,y:Math.min(220,Math.max(177,H*.265)),hp:LEVELS[level-1].bossHp,max:LEVELS[level-1].bossHp,defeated:false,bolts:[],nextStar:1.7,nextMeteor:1.85,hitTimer:0}:null;
     buildBackdrop();hud();
   }
   function show(mode){state.mode=mode;stage.classList.toggle('is-browsing',mode==='levels');
@@ -557,8 +557,8 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
       music.star();}
     show('playing');
     // Show is before toast, otherwise show() hides the message.
-    if(state.boss)toast('✨ BOSS ! ATTRAPE LES ÉTOILES !');
-    else toast(`${LEVELS[number-1].icon} ${LEVELS[number-1].name} !`);
+    if(state.boss)toast('👑 BOSS + 800 POINTS EN 2 MIN !');
+    else toast('⭐ 800 POINTS EN 2 MINUTES !');
   }
   function pause(){if(state.mode==='playing'){show('paused');}else if(state.mode==='paused'){show('playing');last=performance.now();}}
   function home(){state.entities=[];state.particles=[];state.floatText=[];state.boss=null;state.level=1;buildBackdrop();show('menu');}
@@ -567,7 +567,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
     if(state.score>state.best){state.best=state.score;storageSet('cosmo-best',state.best);}
     $('result-kicker').textContent='ENCORE UNE PARTIE !';
     $('result-title').textContent='TU PEUX LE FAIRE !';
-    $('result-text').textContent=`Le monde ${state.level} t’attend. Tes mondes débloqués sont gardés !`;
+    $('result-text').textContent=`${state.score}/800 points au monde ${state.level}. Réessaie pour relever le défi ! Les mondes débloqués sont gardés.`;
     $('result-icon').textContent='🎃';$('final-score').textContent=state.score;$('best-score').textContent=state.best;
     $('replay').innerHTML='RÉESSAYER <span aria-hidden="true">🚀</span>';
     music.bump();show('over');
@@ -598,8 +598,13 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
     emit(state.player.x,state.player.y,['#fff1a2','#ff90c5','#80fff2','#c1a6ff'],80,190,1.4);
     music.finish();show('complete');
   }
+  function checkGoal(){
+    if(state.mode!=='playing'||state.score<GOAL||state.left<=0)return false;
+    if(state.boss&&!state.boss.defeated)return false;
+    completeLevel();return true;
+  }
   function damage(e){
-    if(state.shield>0){state.score+=5;music.shield();emit(e.x,e.y,['#aafff1','#8bdbff','#e6fff9'],21,120,.6);floatText(e.x,e.y,'BOING ! +5','#aaffef');hud();}
+    if(state.shield>0){state.score+=5;music.shield();emit(e.x,e.y,['#aafff1','#8bdbff','#e6fff9'],21,120,.6);floatText(e.x,e.y,'BOING ! +5','#aaffef');hud();checkGoal();}
     else if(state.invuln<=0){state.hearts--;state.invuln=2.5;state.shake=8;music.bump();
       emit(e.x,e.y,['#c5b5e6','#fff0a6','#ff9bbe'],22,125,.65);
       toast(pick(['OUPS, UN CAILLOU ! 😜','BOING ! 👻','MÊME PAS PEUR ! 🎃']));
@@ -610,29 +615,29 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
     if(state.mode!=='playing')return;
     if(e.type==='candy'||e.type==='star'){
       if(state.boss&&e.type==='star'){
-        music.star();state.score+=60;
-        state.boss.bolts.push({x:e.x,y:e.y,life:1.15});
+        music.star();state.score+=100;
+        if(!state.boss.defeated)state.boss.bolts.push({x:e.x,y:e.y,life:1.15});
         emit(e.x,e.y,['#fff9c2','#ffb1e6','#b0fff4'],25,135,.72);
-        floatText(e.x,e.y,'MAGIE ! ✨','#fff2a0');toast('✨ CHATOUILLE MAGIQUE !');hud();return;
+        floatText(e.x,e.y,'+100 MAGIE ! ✨','#fff2a0');toast('✨ CHATOUILLE MAGIQUE !');hud();checkGoal();return;
       }
       if(state.boss&&e.type==='candy'){
-        state.score+=15;music.pick();emit(e.x,e.y,['#ffe892','#ff9cc2'],12,100,.5);
-        floatText(e.x,e.y,'+15','#ffe888');hud();return;
+        state.score+=25;music.pick();emit(e.x,e.y,['#ffe892','#ff9cc2'],12,100,.5);
+        floatText(e.x,e.y,'+25','#ffe888');hud();checkGoal();return;
       }
       const val=e.type==='star'?3:1;state.candy+=val;
       const rapid=state.elapsed-state.lastCandy<2.5;state.combo=rapid?state.combo+1:1;
       state.lastCandy=state.elapsed;
-      const points=(e.type==='star'?50:10)+(state.combo>=3?5:0);
+      const points=(e.type==='star'?100:25)+(state.combo>=3?10:0)+(state.combo>=6?5:0);
       state.score+=points;music[e.type==='star'?'star':'pick']();
       emit(e.x,e.y,['#ffe892','#ff9cc2','#8af9df','#ffffff'],e.type==='star'?28:14,125,.67);
       floatText(e.x,e.y,(e.type==='star'?'+3 🍬 ':'+')+points,'#ffe888');
       if(e.type==='star')toast('ÉTOILE MAGIQUE ! ✨');else if(state.combo===4)toast('SUPER COMBO ! 🍭');
-      hud();if(state.candy>=GOAL)completeLevel();
+      hud();checkGoal();
     } else if(e.type==='shield'){
       state.shield=isExpert()?6:8;music.shield();toast('BOUCLIER MAGIQUE ! 🛡️');emit(e.x,e.y,['#aafef3','#d1ffef','#72d8ff'],22,130,.75);
     } else if(e.type==='heart'){
       if(state.hearts<MAX_HEARTS){state.hearts++;music.star();toast('UN CŒUR RETROUVÉ ! 💗');hud();}
-      else{state.score+=25;music.pick();floatText(e.x,e.y,'+25','#ffb4da');hud();}
+      else{state.score+=25;music.pick();floatText(e.x,e.y,'+25','#ffb4da');hud();checkGoal();}
       emit(e.x,e.y,['#ff9bcf','#ffe9ef','#fff6b4'],16,90,.6);
     } else if(e.type==='meteor')damage(e);
   }
@@ -651,7 +656,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
     p.rot=ease(p.rot,clamp(p.vx/1250,-.37,.37),1-Math.exp(-dt*6));
     const level=LEVELS[state.level-1];
     if(state.elapsed>1){state.spawn-=dt;if(state.spawn<=0){spawnObject();state.spawn=rand(level.spawn*.78,level.spawn*1.20)/(isExpert()?1.16:1);}}
-    if(level.pattern==='storm'||level.pattern==='zigzag'||(level.boss&&state.elapsed>15)){
+    if(level.pattern==='storm'||level.pattern==='zigzag'||(level.boss&&!state.boss?.defeated&&state.elapsed>15)){
       state.wave-=dt;if(state.wave<=0){spawnWave();state.wave=rand(isExpert()?5.5:7.5,isExpert()?7.5:10);}
     }
     if(Math.random()<Math.min(1,dt*25)){
@@ -663,15 +668,20 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;border:0}button:foc
       b.hitTimer=Math.max(0,b.hitTimer-dt);
       b.nextStar-=dt;b.nextMeteor-=dt;
       if(b.nextStar<=0){spawnBossStar();b.nextStar=rand(2.4,3.2)*(isExpert()?1.1:1);}
-      if(b.nextMeteor<=0){spawnBossJelly();if(b.hp<b.max*.5||isExpert())spawnBossJelly();b.nextMeteor=rand(1.3,2.15)/(1+level.sector*.023);}
+      if(b.nextMeteor<=0&&!b.defeated){spawnBossJelly();if(b.hp<b.max*.5||isExpert())spawnBossJelly();b.nextMeteor=rand(1.3,2.15)/(1+level.sector*.023);}
       for(const bolt of b.bolts){const targetY=b.y+20;
         const dx=b.x-bolt.x,dy=targetY-bolt.y,len=Math.hypot(dx,dy)||1;
         let step=600*dt;
-        if(len<=step+16){bolt.done=true;b.hp=Math.max(0,b.hp-1);b.hitTimer=.55;
+        if(b.defeated){bolt.done=true;}
+        else if(len<=step+16){bolt.done=true;b.hp=Math.max(0,b.hp-1);b.hitTimer=.55;
           state.shake=3;music.zap();music.laugh();
           emit(b.x,b.y,['#ffe7a6','#f6a7fb','#9bfdea'],45,170,.85);
           floatText(b.x,b.y+48,'HÉ HÉ HÉ !','#fff8bf');hud();
-          if(b.hp===0){if(state.level===LEVELS.length)finishBoss();else completeLevel();break;}
+          if(b.hp===0&&!b.defeated){
+            b.defeated=true;state.score+=100;hud();toast('👑 BOSS VAINCU ! +100');
+            floatText(b.x,b.y,'+100 BOSS VAINCU !','#fff8bf');
+            if(checkGoal())break;
+          }
         }else{bolt.x+=dx/len*step;bolt.y+=dy/len*step;}
         bolt.life-=dt;if(bolt.life<=0)bolt.done=true;
       }
