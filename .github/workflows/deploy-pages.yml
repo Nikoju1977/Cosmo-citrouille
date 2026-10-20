@@ -9,6 +9,9 @@ on:
       - manifest.webmanifest
       - service-worker.js
       - .github/workflows/deploy-pages.yml
+      - www/**
+      - tests/smoke_800_points.cjs
+      - package.json
   workflow_dispatch:
 
 permissions:
@@ -24,6 +27,10 @@ jobs:
     steps:
       - name: Recuperer les fichiers
         uses: actions/checkout@v4
+      - name: Verifier syntaxe et regles des 140 mondes
+        run: |
+          node --check www/game.js
+          node tests/smoke_800_points.cjs
       - name: Preparer le jeu statique
         run: |
           mkdir -p _site

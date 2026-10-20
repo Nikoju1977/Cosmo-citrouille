@@ -1,6 +1,6 @@
 # COSMO CITROUILLE — L'AVENTURE DES 140 MONDES 🎃🚀
 
-**Version 3.0 — 140 mondes jouables, 14 galaxies, 14 boss, deux modes de difficulté.** Jeu spatial d'Halloween en français, pensé pour être joyeux et accessible aux enfants (à partir d'environ 7 ans). Sans publicité, sans achat intégré, sans collecte de données.
+**Version 3.1 — 140 mondes jouables, 14 galaxies, 14 boss, deux modes de difficulté.** Jeu spatial d'Halloween en français, pensé pour être joyeux et accessible aux enfants (à partir d'environ 7 ans). Sans publicité, sans achat intégré, sans collecte de données.
 
 ## Les 14 galaxies (10 mondes chacune)
 
@@ -50,3 +50,9 @@ Les niveaux débloqués, le mode de difficulté, la victoire finale, le meilleur
 ## Objectif chronométré (version 800 points)
 
 Sur chacun des 140 mondes, il faut atteindre 800 points avant la fin des deux minutes. Chaque nouveau niveau recommence avec zéro point. Les 14 boss exigent également que leur jauge de vie soit réduite à zéro. En mode Défi, les obstacles sont plus rapides et plus nombreux, mais le temps limite reste de 120 secondes.
+
+## Vérification et déploiement
+
+La version **3.1** conserve 140 mondes, 14 boss et l'objectif de **800 points en 120 secondes** dans les deux modes. Le compte à rebours et le score sont réinitialisés à chaque nouveau monde. Un boss ne peut être validé que s'il est vaincu **et** que les 800 points sont atteints avant l'expiration du délai.
+
+Commande de vérification rapide : `npm test` (Node.js, sans installation des dépendances Capacitor). Des parcours complémentaires en navigateur ont été réalisés sur différents formats d'écran ; il reste nécessaire de tester sur des appareils iOS et Android physiques. Le dépôt utilise **GitHub Actions** pour exécuter les contrôles avant la publication sur Pages.

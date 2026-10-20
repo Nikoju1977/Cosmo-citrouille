@@ -52,3 +52,7 @@ Aucune licence open source n'est fournie : les droits sont réservés au titulai
 ## Défi 800 points / 2 minutes
 
 Chaque monde doit être réussi avec **au moins 800 points en 120 secondes maximum**. Le compteur repart à zéro à chaque nouvelle planète. Contre les 14 boss, les 800 points **et** la victoire sur le boss sont nécessaires avant la fin du chrono. Les deux modes de difficulté disposent du même chrono ; les obstacles sont plus difficiles en mode Défi.
+
+## Vérifier avant publication (version 3.1)
+
+Exécuter `npm test` pour contrôler les 140 mondes, les 14 boss, le chronomètre de 120 secondes, l'objectif de 800 points et la remise à zéro du score. Le workflow `.github/workflows/deploy-pages.yml` lance ces contrôles avant le déploiement. La vérification automatisée n'équivaut pas à une validation sur appareils iOS et Android physiques.

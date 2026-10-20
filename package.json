@@ -1,12 +1,13 @@
 {
   "name": "cosmo-citrouille",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "description": "Cosmo Citrouille : 140 mondes, 14 boss et modes Aventure/Défi pour iOS et Android",
   "scripts": {
     "android": "npx cap add android && npx cap sync android && npx cap open android",
     "ios": "npx cap add ios && npx cap sync ios && npx cap open ios",
-    "sync": "npx cap sync"
+    "sync": "npx cap sync",
+    "test": "node tests/smoke_800_points.cjs"
   },
   "dependencies": {
     "@capacitor/core": "^7.4.0"
