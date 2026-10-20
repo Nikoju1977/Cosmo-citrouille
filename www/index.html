@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#160b32">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cosmo Citrouille">
+  <meta name="description" content="Cosmo Citrouille : 140 mondes, 14 boss farfelus, deux difficultés et des défis spatiaux, sans publicité !">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+  <link rel="icon" type="image/png" href="./icons/icon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Cosmo Citrouille — 140 mondes et 14 boss !</title>
+</head>
+<body>
+  <div id="stage" role="application" aria-label="Jeu Cosmo Citrouille">
+    <canvas id="space" aria-label="Vaisseau citrouille et bonbons dans l’espace"></canvas>
+    <div id="vignette" aria-hidden="true"></div>
+
+    <section id="menu" class="screen active" aria-labelledby="game-title">
+      <div class="menu-top">
+        <div class="kicker"><span class="sparkle">✦</span> UNE AVENTURE INTERGALACTIQUE <span class="sparkle">✦</span></div>
+        <h1 id="game-title"><span>COSMO</span><strong>CITROUILLE</strong></h1>
+        <p class="tagline">La chasse aux bonbons de l’espace !</p>
+      </div>
+      <div class="menu-bottom">
+        <div class="mission-card">
+          <span class="mission-icon" aria-hidden="true">🍬</span>
+          <div><strong>140 mondes à explorer !</strong><span>14 galaxies mystérieuses + 14 boss rigolos !</span></div>
+        </div>
+        <button id="play" class="big-button"><span>CHOISIR UN MONDE</span><span class="button-rocket" aria-hidden="true">🚀</span></button>
+        <p class="instructions">☝️ Glisse ton doigt · 140 mondes · 2 difficultés</p>
+      </div>
+    </section>
+
+    <section id="levels" class="screen levels-screen" aria-labelledby="levels-title">
+      <div class="levels-head">
+        <div class="kicker">✦ CARTE DE LA GALAXIE ✦</div>
+        <h2 id="levels-title">CHOISIS TA PLANÈTE</h2>
+        <div class="sector-heading"><button id="prev-sector" class="sector-arrow" aria-label="Galaxie précédente">‹</button><div class="sector-center"><div id="sector-count" class="sector-count">GALAXIE 1/14</div><div class="sector-title"><span id="sector-icon">🌟</span> <span id="sector-name">Jardins stellaires</span></div><div id="galaxy-progress" class="galaxy-progress">0/140 mondes terminés</div></div><button id="next-sector" class="sector-arrow" aria-label="Galaxie suivante">›</button></div>
+        <div class="mode-select" aria-label="Difficulté"><button id="mode-aventure" class="mode-option selected" aria-pressed="true">🌟 Aventure</button><button id="mode-expert" class="mode-option" aria-pressed="false">🔥 Défi</button></div>
+      </div>
+      <div id="level-grid" class="level-grid" aria-label="Sélection des niveaux"></div>
+      <button id="levels-home" class="text-button levels-back">← Retour à l’accueil</button>
+    </section>
+
+    <div id="hud" class="hud hidden" aria-live="off">
+      <div class="hud-row">
+        <div class="hud-bubble candies-counter"><span class="hud-icon" aria-hidden="true">🍬</span><span id="candy-count">0/15</span></div>
+        <div id="hearts" class="hearts" aria-label="4 cœurs">♥ ♥ ♥ ♥</div>
+        <button id="pause" class="icon-button" aria-label="Mettre en pause"><span aria-hidden="true">Ⅱ</span></button>
+      </div>
+      <div class="progress-track" aria-hidden="true"><div id="progress-bar"></div></div>
+      <div class="hud-sub"><span id="score">⭐ 0</span><span id="level-label">MONDE 1/140</span><span id="timer">⏱ 1:30</span></div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <section id="pause-screen" class="modal hidden" aria-labelledby="pause-title">
+      <div class="modal-panel">
+        <div class="modal-illustration" aria-hidden="true">👻</div>
+        <h2 id="pause-title">Pause cosmique !</h2>
+        <p>Les fantômes prennent un petit goûter.</p>
+        <button id="resume" class="big-button">CONTINUER <span aria-hidden="true">✨</span></button>
+        <button id="pause-home" class="text-button">Retour à l’accueil</button>
+      </div>
+    </section>
+    <section id="level-complete" class="modal hidden" aria-labelledby="complete-title">
+      <div class="modal-panel result-panel">
+        <div class="modal-illustration" id="complete-icon" aria-hidden="true">🌟</div>
+        <div class="result-kicker" id="complete-kicker">MONDE TERMINÉ !</div>
+        <h2 id="complete-title">BRAVO !</h2>
+        <p id="complete-text">Prête pour le monde suivant ?</p>
+        <div class="next-unlock" id="next-unlock">🌙 Planète suivante débloquée !</div>
+        <button id="next-level" class="big-button">MONDE SUIVANT <span aria-hidden="true">🚀</span></button>
+        <button id="complete-levels" class="text-button">Choisir un autre monde</button>
+      </div>
+    </section>
+    <section id="result" class="modal hidden" aria-labelledby="result-title">
+      <div class="modal-panel result-panel">
+        <div id="result-icon" class="modal-illustration" aria-hidden="true">🏆</div>
+        <div class="result-kicker" id="result-kicker">MISSION ACCOMPLIE !</div>
+        <h2 id="result-title">BRAVO, CAPITAINE !</h2>
+        <p id="result-text">Tu as rempli la galaxie de bonbons !</p>
+        <div class="result-stats"><div><b id="final-score">0</b><small>POINTS</small></div><div><b id="best-score">0</b><small>RECORD</small></div></div>
+        <button id="replay" class="big-button">RÉESSAYER <span aria-hidden="true">🚀</span></button>
+        <button id="result-home" class="text-button">Carte de la galaxie</button>
+      </div>
+    </section>
+    <button id="sound" class="sound-button" aria-label="Couper le son" title="Activer ou couper le son">♫</button>
+    <div id="rotate-hint" aria-hidden="true">Le jeu est encore plus chouette en mode portrait !</div>
+  </div>
+  <script src="./game.js" defer></script>
+  <script>
+    if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "Cosmo Citrouille — Halloween dans les étoiles !",
+  "short_name": "Cosmo Citrouille",
+  "description": "140 mondes et 14 boss farfelus, sans publicité.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#160b32",
+  "theme_color": "#160b32",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

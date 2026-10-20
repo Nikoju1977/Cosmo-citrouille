@@ -1,0 +1,13 @@
+{
+  "appId": "com.cosmocitrouille.jeu",
+  "appName": "Cosmo Citrouille",
+  "webDir": "www",
+  "backgroundColor": "#160b32",
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false
+  },
+  "android": {
+    "backgroundColor": "#160b32"
+  }
+}
