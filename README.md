@@ -4,6 +4,8 @@ Jeu spatial d'Halloween en français pour les enfants à partir d'environ 7 ans.
 
 **Contenu :** 140 mondes répartis dans 14 galaxies, 14 boss, modes Aventure et Défi, commandes tactiles et clavier, progression sauvegardée localement, aucun achat intégré ni publicité.
 
+**Éditeur du projet :** [Nikoju1977](https://github.com/Nikoju1977). La présentation publique du jeu utilise le nom Cosmo Citrouille.
+
 ## Jouer dans le navigateur
 
 Ouvrir [`index.html`](index.html) (version autonome) ou utiliser GitHub Pages pour une page jouable directement dans le navigateur.
