@@ -8,7 +8,7 @@ Jeu spatial d'Halloween en français pour les enfants à partir d'environ 7 ans.
 
 Ouvrir [`index.html`](index.html) (version autonome) ou utiliser GitHub Pages pour une page jouable directement dans le navigateur.
 
-**Activer GitHub Pages :** dans le dépôt GitHub, ouvrir **Settings → Pages → Build and deployment**, sélectionner **Deploy from a branch**, puis la branche `main` et le dossier `/(root)`. Après publication, l'adresse du jeu apparaîtra dans l'interface Pages.
+**Activer GitHub Pages (une seule fois) :** dans le dépôt GitHub, ouvrir **Settings → Pages → Build and deployment**, puis choisir **GitHub Actions** comme source. La publication est automatisée par [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml). Si le workflow a échoué avant l'activation, le relancer depuis **Actions → Publier Cosmo Citrouille sur GitHub Pages → Run workflow**. Une fois le déploiement réussi, l'adresse attendue est `https://nikoju1977.github.io/Cosmo-citrouille/` ; elle n'est accessible qu'après confirmation par GitHub.
 
 ## Projet web et applications mobiles
 
